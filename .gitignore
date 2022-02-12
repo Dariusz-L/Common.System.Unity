@@ -265,9 +265,6 @@ __pycache__/
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
 
-# Never ignore Asset meta data
-!/MLU.Unity/[Aa]ssets/**/*.meta
-
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
 
@@ -302,7 +299,6 @@ ExportedObj/
 *.pidb.meta
 *.pdb.meta
 *.mdb.meta
-*.meta
 
 # Unity3D generated file on crash reports
 sysinfo.txt
