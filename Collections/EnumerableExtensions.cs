@@ -32,6 +32,39 @@ namespace Common.Domain.Collections
             return enumerable;
         }
 
+        public static void ForEachN<T>(
+            this IEnumerable<T> enumerable, int stepStart, int step, Action<T> onStep, Action<T> onOther = null)
+        {
+            if (step < 1)
+                return;
+
+            var array = enumerable.ToArray();
+            int count = array.Length;
+
+            for (int i = 0; i < stepStart; i++)
+                onOther(array[i]);
+
+            for (int i = stepStart; i < count; i += step)
+            {
+                onStep(array[i]);
+                for (int j = i + 1; j < i + step && j < count; j++)
+                    onOther(array[j]);
+            }
+        }
+
+        public static IEnumerable<T> ForEachReversed<T>(this IEnumerable<T> enumerable, Action<T> itemAction)
+        {
+            var list = enumerable.ToList();
+            for (int i = list.Count - 1; i >= 0; i--)
+            {
+                var item = list[i];
+                if (item != null)
+                    itemAction(item);
+            }
+
+            return enumerable;
+        }
+
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
         {
             return enumerable.IsNull() || enumerable.IsEmpty();
