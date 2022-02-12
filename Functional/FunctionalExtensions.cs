@@ -116,6 +116,22 @@ namespace Common.Domain.Functional
             return action2();
         }
 
+        public static T IfOkayThen<T>(this T @object, Action<T> action)
+        {
+            if (@object != null)
+                action(@object);
+
+            return @object;
+        }
+
+        public static T IfNullThen<T>(this T @object, Action action)
+        {
+            if (@object == null)
+                action();
+
+            return @object;
+        }
+
         public static bool Not(this bool value)
         {
             return !value;
