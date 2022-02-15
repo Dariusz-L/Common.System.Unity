@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections;
-using UnityEngine;
+using NMath = System.Math;
 
-namespace Common.Algorithms
+namespace Common.System.Math
 {
     public class LerpingFunctions
     {
-        public static Func<float, float> SinerpLerp = t => Mathf.Sin(t* Mathf.PI* 0.5f);
+        public static Func<float, float> SinerpLerp = t => (float) NMath.Sin(t * NMath.PI * 0.5f);
         public static Func<float, float> LinearLerp = t => t * t;
-        public static Func<float, float> CoserpLerp = t => 1f - Mathf.Cos(t * Mathf.PI * 0.5f);
+        public static Func<float, float> CoserpLerp = t => (float) (1f - NMath.Cos(t * NMath.PI * 0.5f));
         public static Func<float, float> ExpLerp = t => t * t;
         public static Func<float, float> SmoothStepLerp = t => t * t * (3f - 2f * t);
         public static Func<float, float> SmootherStepLerp = t => t * t * t * (t * (6f * t - 15f) + 10f);
