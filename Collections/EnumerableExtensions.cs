@@ -7,6 +7,20 @@ namespace Common.Domain.Collections
 {
     public static class EnumerableExtensions
     {
+        public static void ForEach(this int index, Action action)
+        {
+            index = Math.Abs(index);
+            for (int i = 0; i < index; i++)
+                action();
+        }
+
+        public static void ForEach(this int index, Action<int> action)
+        {
+            index = Math.Abs(index);
+            for (int i = 0; i < index; i++)
+                action(i);
+        }
+
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> enumerable, Action<T> itemAction)
         {
             foreach (var item in enumerable)
