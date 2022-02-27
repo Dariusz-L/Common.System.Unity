@@ -1,11 +1,24 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 
 namespace Common.Infrastructure.Reflection
 {
     public static class TypeGetMethodExtensions
     {
+        public static MethodBase GetMethod(this object[] @objects, string name)
+        {
+            foreach (var obj in objects)
+            {
+                var objectType = obj.GetType();
+                var methods = objectType.GetMethods();
+                var methodsOfName = methods.Where(m => m.Name == name);
+                if (methodsOfName.Any())
+                    return methodsOfName.First();
+            }
+
+            return null;
+        }
+
         public static MethodBase GetMethodWithParamType<TObject, TParam>(TObject[] @objects, out object @object)
         {
             @object = null;
