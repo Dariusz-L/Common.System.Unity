@@ -1,4 +1,6 @@
-﻿namespace Common.Domain.Collections
+﻿using System;
+
+namespace Common.Domain.Collections
 {
     public static class NumericExtensions
     {
@@ -11,6 +13,17 @@
                 dynamicValue = loop ? lowerLimit : upperLimit;
                 
             value = dynamicValue;
+        }
+
+        public static bool Equals<T>(this T first, T second, T tolerance) where T : struct
+        {
+            dynamic dynamicFirst = first;
+            dynamic dynamicSecond = second;
+            
+            dynamic res = dynamicFirst - dynamicSecond;
+            dynamic resAbs = Math.Abs(res);
+
+            return resAbs <= tolerance;
         }
     }
 }
