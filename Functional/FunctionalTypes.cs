@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.Domain.Functional
+namespace Common.Basic.Functional
 {
     public interface IResult<TValue, TError>
     {

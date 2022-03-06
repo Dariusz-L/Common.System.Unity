@@ -1,4 +1,4 @@
-﻿namespace Common.System.Blocks
+﻿namespace Common.Basic.Blocks
 {
     public class Remark
     {

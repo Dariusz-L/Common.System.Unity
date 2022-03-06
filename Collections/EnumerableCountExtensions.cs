@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Common.Domain.Collections
+namespace Common.Basic.Collections
 {
     public static class EnumerableCountExtensions
     {

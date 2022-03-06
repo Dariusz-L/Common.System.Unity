@@ -1,4 +1,4 @@
-﻿namespace Common.Domain.Functional
+﻿namespace Common.Basic.Functional
 {
     public static class NullableExtensions
     {

@@ -2,7 +2,7 @@
 using System.Collections;
 using NMath = System.Math;
 
-namespace Common.System.Math
+namespace Common.Basic.Math
 {
     public class LerpingFunctions
     {

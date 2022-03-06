@@ -1,8 +1,8 @@
-﻿using Common.Domain.Collections;
+﻿using Common.Basic.Collections;
 using System;
 using System.Linq;
 
-namespace Common.Domain.Functional
+namespace Common.Basic.Functional
 {
     public static class DFuncExt
     {

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Reflection;
 
-namespace Common.Infrastructure.Reflection
+namespace Common.Basic.Reflection
 {
     public static class TypeGetMethodExtensions
     {

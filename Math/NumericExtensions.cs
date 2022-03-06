@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Common.Domain.Collections
+﻿namespace Common.Basic.Collections
 {
     public static class NumericExtensions
     {
@@ -21,7 +19,7 @@ namespace Common.Domain.Collections
             dynamic dynamicSecond = second;
             
             dynamic res = dynamicFirst - dynamicSecond;
-            dynamic resAbs = Math.Abs(res);
+            dynamic resAbs = System.Math.Abs(res);
 
             return resAbs <= tolerance;
         }

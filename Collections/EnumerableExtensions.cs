@@ -1,22 +1,22 @@
-﻿using Common.Domain.Functional;
+﻿using Common.Basic.Functional;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Common.Domain.Collections
+namespace Common.Basic.Collections
 {
     public static class EnumerableExtensions
     {
         public static void ForEach(this int index, Action action)
         {
-            index = Math.Abs(index);
+            index = System.Math.Abs(index);
             for (int i = 0; i < index; i++)
                 action();
         }
 
         public static void ForEach(this int index, Action<int> action)
         {
-            index = Math.Abs(index);
+            index = System.Math.Abs(index);
             for (int i = 0; i < index; i++)
                 action(i);
         }

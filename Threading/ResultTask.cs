@@ -1,8 +1,8 @@
-﻿using Common.System.Blocks;
+﻿using Common.Basic.Blocks;
 using System;
 using System.Threading.Tasks;
 
-namespace Common.Infrastructure.Threading
+namespace Common.Basic.Threading
 {
     public static class ResultTask
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Common.System.Blocks
+namespace Common.Basic.Blocks
 {
     public static class ResultExtensions
     {

@@ -1,4 +1,4 @@
-﻿namespace Common.Domain.Collections
+﻿namespace Common.Basic.Collections
 {
     public static class StringExtensions
     {
