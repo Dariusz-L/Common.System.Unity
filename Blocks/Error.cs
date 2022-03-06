@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.Domain.Basic
+namespace Common.System.Blocks
 {
     public class Error
     {
