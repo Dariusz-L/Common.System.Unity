@@ -1,4 +1,6 @@
-﻿namespace Common.Basic.Counters
+﻿using System;
+
+namespace Common.Basic.Counters
 {
     public class TimedCounter
     {
