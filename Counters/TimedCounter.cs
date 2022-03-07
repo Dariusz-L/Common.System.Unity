@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Common.Basic.Counters
 {
@@ -53,9 +54,22 @@ namespace Common.Basic.Counters
 
     public class TimerFunctions
     {
-        public Action Restart = () => {};
-        public Action Stop = () => {};
+        public Action Restart = () => { };
+        public Action Stop = () => { };
         public Func<bool> IsRunning = () => false;
         public Func<float> ElapsedMilliseconds = () => 0.0f;
+
+        public static TimerFunctions FromStopwatch()
+        {
+            var stopwatch = new Stopwatch();
+
+            var tf = new TimerFunctions();
+            tf.Restart = stopwatch.Restart;
+            tf.Stop = stopwatch.Stop;
+            tf.IsRunning = () => stopwatch.IsRunning;
+            tf.ElapsedMilliseconds = () => stopwatch.ElapsedMilliseconds;
+
+            return tf;
+        }
     }
 }
