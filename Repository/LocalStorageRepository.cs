@@ -1,5 +1,6 @@
 ﻿using Common.Basic.Blocks;
 using Common.Basic.DDD;
+using Common.Basic.Files;
 using Common.Basic.Json;
 using System;
 using System.Collections.Generic;
@@ -21,11 +22,6 @@ namespace Common.Basic.Repository
             _jsonConverter = jsonConverter;
         }
 
-        private static string CreateFilePath(string pathToDirectory, string id)
-        {
-            return pathToDirectory.Trim('\\', '/') + '/' + id;
-        }
-
         Task<Result<TEntity>> IRepository<TEntity>.GetBy(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -37,7 +33,7 @@ namespace Common.Basic.Repository
             if (!Directory.Exists(_pathToDirectory))
                 return Result<TEntity>.FailureTask();
 
-            string filePath = CreateFilePath(_pathToDirectory, id);
+            string filePath = FileFunctions.CreateFilePath(_pathToDirectory, id);
 
             try
             {
@@ -77,7 +73,7 @@ namespace Common.Basic.Repository
             if (!Directory.Exists(_pathToDirectory))
                 Directory.CreateDirectory(_pathToDirectory);
 
-            string filePath = CreateFilePath(_pathToDirectory, item.ID);
+            string filePath = FileFunctions.CreateFilePath(_pathToDirectory, item.ID);
 
             item.Version++;
             var fileData = _jsonConverter.Serialize(item);
@@ -106,10 +102,10 @@ namespace Common.Basic.Repository
             if (!Directory.Exists(_pathToDirectory))
                 Directory.CreateDirectory(_pathToDirectory);
 
-            string filePath = CreateFilePath(_pathToDirectory, id);
+            string filePath = FileFunctions.CreateFilePath(_pathToDirectory, id);
             try
             {
-                File.Delete(_pathToDirectory);
+                File.Delete(filePath);
                 return Result.SuccessTask();
             }
             catch (Exception ex)
