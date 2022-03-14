@@ -1,4 +1,4 @@
-﻿namespace Common.App.CQRS.Command
+﻿namespace Common.Basic.CQRS.Command
 {
     public interface ICommand
     {

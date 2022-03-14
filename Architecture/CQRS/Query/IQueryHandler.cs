@@ -1,7 +1,7 @@
 ﻿using Common.Basic.Blocks;
 using System.Threading.Tasks;
 
-namespace Common.App.CQRS.Query
+namespace Common.Basic.CQRS.Query
 {
     public interface IQueryHandler<TQuery, TQueryOutput>
         where TQuery : IQuery

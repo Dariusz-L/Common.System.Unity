@@ -1,7 +1,7 @@
 ﻿using Common.Basic.Blocks;
 using System.Threading.Tasks;
 
-namespace Common.App.CQRS.Command
+namespace Common.Basic.CQRS.Command
 {
     public interface ICommandHandler<TCommand>
         where TCommand : ICommand
