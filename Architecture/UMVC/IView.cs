@@ -2,5 +2,6 @@
 {
     public interface IView
     {
+        T AsParent<T>() where T : class;
     }
 }
