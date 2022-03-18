@@ -33,16 +33,16 @@ namespace Common.Basic.UMVC
 
         public static INavigatable BuildPushPopUnstash<TObject, TState>(
             Action<TState> load,
-            Action unload) where TState : class, new()
+            Action<TState> unload) where TState : class, new()
 
         {
             return new NavigatableWithState<TObject, TState>(
                  onPush: state => { load(state); return true; },
-                 onPop: state => unload(),
+                 onPop: state => unload(state),
                  onStash: (state, nav) => Navigatable.OnStashDefault(nav),
                  onUnstash: (state, nav) =>
                  {
-                     unload();
+                     unload(state);
                      load(state);
                      return true;
                  });

@@ -6,18 +6,27 @@ namespace Common.Basic.UMVC
     {
         private Stack<INavigatable> _stack = new Stack<INavigatable>();
 
-        public void Push(INavigatable navigatable)
+        public void Push(INavigatable navigatable, bool stashFirst = false)
         {
             // If last in stack is same as passed, then replace
             if (_stack.Count > 0 && navigatable.Equals(_stack.Peek()))
                 Pop(unstashPrevious: false);
 
+            if (stashFirst)
+                OnStash();
+
             if (navigatable.OnPush())
+            {
+                if (!stashFirst)
+                    OnStash();
+
+                _stack.Push(navigatable);
+            }
+
+            void OnStash()
             {
                 if (_stack.Count > 0)
                     _stack.Peek().OnStash(navigatable);
-
-                _stack.Push(navigatable);
             }
         }
 

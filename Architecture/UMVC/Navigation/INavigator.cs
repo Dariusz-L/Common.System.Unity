@@ -2,7 +2,7 @@
 {
     public interface INavigator
     {
-        void Push(INavigatable navigated);
+        void Push(INavigatable navigated, bool onStashFirst = false);
         void PushLast();
         void Pop(bool unstashPrevious = true);
 
