@@ -5,6 +5,8 @@
         void Show();
         void Hide();
 
+        bool IsVisible { get; }
+
         T AsParent<T>() where T : class;
 
     }
