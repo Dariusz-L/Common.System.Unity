@@ -101,5 +101,18 @@ namespace Common.Basic.Collections
                 elements[swapIndex] = elements[i];
             }
         }
+
+        public static T FirstBeforeLast<T>(this IEnumerable<T> source)
+        {
+            return source.ToArray()[source.Count() - 2];
+        }
+
+        public static T FirstBeforeLastOrFirst<T>(this IEnumerable<T> source)
+        {
+            if (source.Count() < 2)
+                return source.First();
+
+            return source.FirstBeforeLast();
+        }
     }
 }
