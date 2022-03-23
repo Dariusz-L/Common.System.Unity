@@ -114,5 +114,7 @@ namespace Common.Basic.Collections
 
             return source.FirstBeforeLast();
         }
+
+        public static IEnumerable<T> TakeExceptLast<T>(this IEnumerable<T> source) => source.Take(source.Count() - 1);
     }
 }
