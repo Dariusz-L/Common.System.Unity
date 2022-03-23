@@ -73,7 +73,7 @@ namespace Common.Basic.Math
             Func<IEnumerator, TCoroutine> startCoroutine,
             Func<float> getDeltaTime,
             Func<float, float> curveLerp,
-            Action onDone)
+            Action onDone = null)
         {
             var startValue = getValue();
             var lerpEnumerator = LerpingFunctions.Lerp(
