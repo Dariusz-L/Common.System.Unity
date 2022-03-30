@@ -11,4 +11,9 @@ namespace Common.Basic.UMVC
 
         Type Type { get; }
     }
+
+    public interface INavigatable<TState> : INavigatable
+    {
+        TState State { get; }
+    }
 }

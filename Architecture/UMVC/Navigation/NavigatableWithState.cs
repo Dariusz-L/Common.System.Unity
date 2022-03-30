@@ -2,7 +2,7 @@
 
 namespace Common.Basic.UMVC
 {
-    public class NavigatableWithState<TState> : INavigatable
+    public class NavigatableWithState<TState> : INavigatable<TState>
         where TState : class, new()
     {
         public static Func<TState, bool> OnPushDefault = state => true;
@@ -40,6 +40,7 @@ namespace Common.Basic.UMVC
         public void OnStash(INavigatable navigatable) => _onStash(_state, navigatable);
         public bool OnUnstash(INavigatable poped) => _onUnstash(_state, poped);
         public Type Type { get; }
+        public TState State => _state;
     }
 
     public class NavigatableWithState<TNavigatable, TState> : NavigatableWithState<TState>
