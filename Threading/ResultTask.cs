@@ -18,5 +18,18 @@ namespace Common.Basic.Threading
                     onError?.Invoke();
             });
         }
+
+        public static Task Run(
+            Func<Task<Result>> function, Action onSuccess, Action onError = null)
+        {
+            return Task.Run(() =>
+            {
+                var res = function().GetAwaiter().GetResult();
+                if (res.IsSuccess)
+                    onSuccess();
+                else
+                    onError?.Invoke();
+            });
+        }
     }
 }
