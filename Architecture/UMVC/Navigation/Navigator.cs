@@ -8,9 +8,10 @@ namespace Common.Basic.UMVC
 
         public void Push(INavigatable navigatable, bool stashFirst = false)
         {
+            bool unstashPrevious = true;
             // If last in stack is same as passed, then replace
             if (_stack.Count > 0 && navigatable.Equals(_stack.Peek()))
-                Pop(unstashPrevious: false);
+                PopInternal(unstashPrevious = false);
 
             if (stashFirst)
                 OnStash();
@@ -25,7 +26,7 @@ namespace Common.Basic.UMVC
 
             void OnStash()
             {
-                if (_stack.Count > 0)
+                if (_stack.Count > 0 && unstashPrevious)
                     _stack.Peek().OnStash(navigatable);
             }
         }
@@ -43,16 +44,21 @@ namespace Common.Basic.UMVC
             if (_stack.Count <= 1)
                 return;
 
-            _stack.Peek().OnPop();
-            
-            var poped = _stack.Pop();
-            if (unstashPrevious)
-                _stack.Peek().OnUnstash(poped);
+            PopInternal(unstashPrevious);
         }
 
         public INavigatable GetLast()
         {
             return _stack.Peek();
+        }
+
+        private void PopInternal(bool unstashPrevious)
+        {
+            _stack.Peek().OnPop();
+
+            var poped = _stack.Pop();
+            if (unstashPrevious)
+                _stack.Peek().OnUnstash(poped);
         }
     }
 }
