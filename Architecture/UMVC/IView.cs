@@ -8,5 +8,6 @@
         bool IsVisible { get; }
 
         IView AsParent();
+        T GetParent<T>() where T : IView;
     }
 }

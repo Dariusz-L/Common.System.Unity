@@ -116,5 +116,6 @@ namespace Common.Basic.Collections
         }
 
         public static IEnumerable<T> TakeExceptLast<T>(this IEnumerable<T> source) => source.Take(source.Count() - 1);
+        public static IEnumerable<T> Except<T>(this IEnumerable<T> source, T item) => source.Except(new T[] { item });
     }
 }
