@@ -62,7 +62,8 @@ namespace Common.Basic.CQRS
 
         private Type GetCommandHandlerType<TCommand>()
         {
-            _dictionary.TryGetValue(typeof(TCommand).Name, out var value);
+            var typeName = typeof(TCommand).Name;
+            _dictionary.TryGetValue(typeName, out var value);
             return value;
         }
     }
