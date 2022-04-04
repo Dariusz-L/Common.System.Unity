@@ -1,4 +1,4 @@
-﻿namespace Common.Basic.UMVC
+﻿namespace Common.Basic.UMVC.Elements
 {
     public interface IView
     {
