@@ -2,6 +2,7 @@
 {
     public interface IView
     {
+        string ID { get; set; }
         void Show();
         void Hide();
 
@@ -9,5 +10,6 @@
 
         IView AsParent();
         T GetParent<T>() where T : IView;
+        IView GetParent();
     }
 }
