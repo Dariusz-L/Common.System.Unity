@@ -102,6 +102,18 @@ namespace Common.Basic.Collections
             }
         }
 
+        public static T FirstBefore<T>(this IEnumerable<T> source, int index)
+        {
+            var array = source.ToArray();
+            if (array.Length <= 1)
+                return default;
+
+            if (index >= array.Length)
+                return array.FirstBeforeLast();
+
+            return array[index - 1];
+        }
+
         public static T FirstBeforeLast<T>(this IEnumerable<T> source)
         {
             var array = source.ToArray();
