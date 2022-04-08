@@ -11,5 +11,7 @@
         IView AsParent();
         T GetParent<T>() where T : IView;
         IView GetParent();
+
+        void FitToChildren();
     }
 }
