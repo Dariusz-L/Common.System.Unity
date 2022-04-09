@@ -10,6 +10,7 @@
 
         IView AsParent();
         T GetParent<T>() where T : IView;
+        T GetParentTopMost<T>() where T : IView;
         IView GetParent();
 
         void FitToChildren();
