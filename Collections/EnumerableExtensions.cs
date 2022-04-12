@@ -136,5 +136,19 @@ namespace Common.Basic.Collections
 
         public static IEnumerable<T> TakeExceptLast<T>(this IEnumerable<T> source) => source.Take(source.Count() - 1);
         public static IEnumerable<T> Except<T>(this IEnumerable<T> source, T item) => source.Except(new T[] { item });
+
+        public static bool TryGetValue<T>(this IList<T> source, int index, out T value)
+        {
+            value = default;
+            if (index < 0)
+                return false;
+
+            int count = source.Count();
+            if (index >= count)
+                return false;
+
+            value = source.ToArray()[index];
+            return true;
+        }
     }
 }

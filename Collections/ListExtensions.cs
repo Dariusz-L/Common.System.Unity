@@ -29,5 +29,22 @@ namespace Common.Basic.Collections
             index = index.Clamp(0, list.Count);
             list.Insert(index, item);
         }
+
+        public static T GetItemAfter<T>(this IList<T> list, T item) => list.GetItemNFrom(item, 1);
+
+        public static T GetItemBefore<T>(this IList<T> list, T item) => list.GetItemNFrom(item, -1);
+
+        public static T GetItemNFrom<T>(this IList<T> list, T item, int indexOffset)
+        {
+            int index = list.IndexOf(item);
+            if (!list.IsIndexInRange(index))
+                return default;
+
+            int newIndex = index + indexOffset;
+            if (!list.IsIndexInRange(newIndex))
+                return default;
+
+            return list[newIndex];
+        }
     }
 }
