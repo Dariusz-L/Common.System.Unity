@@ -23,11 +23,24 @@ namespace Common.Basic.Repository
             });
         }
 
-        public static async Task<Result> GetRunSaveEntity<T>(this IRepository<T> repository, string id, Func<T, bool> function)
+        public static async Task<Result> GetRunSaveEntity<T>(this IRepository<T> repository, string id, Func<T, bool> operation)
         {
             var entity = await repository.GetEntity(id);
-            if (!function(entity))
+            if (!operation(entity))
                 return Result.Failure();
+
+            return repository.Save(entity);
+        }
+
+        public static async Task<Result> GetByNameCreateSaveEntity<T>(
+            this IRepository<T> repository, string name, Func<string, Task<bool>> existsOfName)
+        {
+            bool exists = await existsOfName(name);
+            if (exists)
+                return Result.Failure();
+
+            string id = Guid.NewGuid().ToString();
+            T entity = (T) Activator.CreateInstance(typeof(T), new object[] { id, name });
 
             return repository.Save(entity);
         }
