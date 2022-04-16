@@ -23,7 +23,7 @@ namespace Common.Basic.Repository
             });
         }
 
-        public static async Task<Result> GetRunSaveEntity<T>(this IRepository<T> repository, string id, Func<T, bool> operation)
+        public static async Task<Result> GetRunAndSaveEntity<T>(this IRepository<T> repository, string id, Func<T, bool> operation)
         {
             var entity = await repository.GetEntity(id);
             if (!operation(entity))
@@ -32,7 +32,7 @@ namespace Common.Basic.Repository
             return repository.Save(entity);
         }
 
-        public static async Task<Result> GetByNameCreateSaveEntity<T>(
+        public static async Task<Result> GetByNameCreateAndSaveEntity<T>(
             this IRepository<T> repository, string name, Func<string, Task<bool>> existsOfName)
         {
             bool exists = await existsOfName(name);
@@ -42,6 +42,20 @@ namespace Common.Basic.Repository
             string id = Guid.NewGuid().ToString();
             T entity = (T) Activator.CreateInstance(typeof(T), new object[] { id, name });
 
+            return repository.Save(entity);
+        }
+
+        public static async Task<Result> GetIfExistsOrCreateAndSave<T>(this IRepository<T> repository, string id, Func<T> createEntity)
+        {
+            var result = await repository.GetBy(id);
+            if (!result.IsSuccess)
+                return result;
+
+            T entity = result.Get<T>();
+            if (entity != null)
+                return result;
+
+            entity = createEntity();
             return repository.Save(entity);
         }
     }

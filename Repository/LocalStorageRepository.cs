@@ -43,6 +43,9 @@ namespace Common.Basic.Repository
             }
             catch (Exception ex)
             {
+                if (ex is FileNotFoundException)
+                    return Result<TEntity>.SuccessTask();
+
                 return Result<TEntity>.FailureTask(ex);
             }
         }
