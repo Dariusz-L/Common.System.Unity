@@ -8,18 +8,20 @@ namespace Common.Basic.Repository
     {
         public static Task<T> GetEntity<T>(this IRepository<T> repository, string id)
         {
-            return Task.Run(() =>
-            {
-                var res = repository.GetBy(id).GetAwaiter().GetResult();
-                return res.Get<T>();
-            });
+            return Task.Run(
+                async () =>
+                {
+                    var res = await repository.GetBy(id);
+                    return res.Get<T>();
+                });
         }
 
         public static Task SaveEntity<T>(this IRepository<T> repository, T item)
         {
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
-                return repository.Save(item).GetAwaiter().GetResult();
+                var result = await repository.Save(item);
+                return result;
             });
         }
 
@@ -57,6 +59,30 @@ namespace Common.Basic.Repository
 
             entity = createEntity();
             return repository.Save(entity);
+        }
+
+        public static async Task<Result<string>> GetRunAndSaveEntity_ThenCreateNew<T>(
+            this IRepository<T> repository, string id, Func<T, string, bool> operation, Func<string, T> create)
+        {
+            var entity = await repository.GetEntity(id);
+
+            string newID = Guid.NewGuid().ToString();
+            if (!operation(entity, newID))
+                return Result<string>.Failure();
+
+            var newEntity = create(newID);
+            if (newEntity == null)
+                return Result<string>.Failure();
+
+            var saveNewResult = await repository.Save(newEntity);
+            if (!saveNewResult.IsSuccess)
+                return new Result<string>(saveNewResult);
+
+            var saveOldResult = await repository.Save(entity);
+            if (!saveOldResult.IsSuccess)
+                return new Result<string>(saveOldResult);
+
+            return Result<string>.Success();
         }
     }
 }

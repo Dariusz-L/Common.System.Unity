@@ -9,9 +9,9 @@ namespace Common.Basic.Threading
         public static Task Run<TReturnValue>(
             Func<Task<Result<TReturnValue>>> function, Action<TReturnValue> onSuccess, Action onError = null)
         {
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
-                var res = function().GetAwaiter().GetResult();
+                var res = await function();
                 if (res.IsSuccess)
                     onSuccess(res.Get<TReturnValue>());
                 else
@@ -22,9 +22,9 @@ namespace Common.Basic.Threading
         public static Task Run(
             Func<Task<Result>> function, Action onSuccess, Action onError = null)
         {
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
-                var res = function().GetAwaiter().GetResult();
+                var res = await function();
                 if (res.IsSuccess)
                     onSuccess();
                 else
