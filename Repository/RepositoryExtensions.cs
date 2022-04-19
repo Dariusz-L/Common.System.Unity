@@ -6,23 +6,16 @@ namespace Common.Basic.Repository
 {
     public static class RepositoryExtensions
     {
-        public static Task<T> GetEntity<T>(this IRepository<T> repository, string id)
+        public static async Task<T> GetEntity<T>(this IRepository<T> repository, string id)
         {
-            return Task.Run(
-                async () =>
-                {
-                    var res = await repository.GetBy(id);
-                    return res.Get<T>();
-                });
+            var res = await repository.GetBy(id);
+            return res.Get<T>();
         }
 
-        public static Task SaveEntity<T>(this IRepository<T> repository, T item)
+        public static async Task<bool> SaveEntity<T>(this IRepository<T> repository, T item)
         {
-            return Task.Run(async () =>
-            {
-                var result = await repository.Save(item);
-                return result;
-            });
+            var res = await repository.Save(item);
+            return res.IsSuccess;
         }
 
         public static async Task<Result> GetRunAndSaveEntity<T>(this IRepository<T> repository, string id, Func<T, bool> operation)
@@ -34,12 +27,16 @@ namespace Common.Basic.Repository
             return repository.Save(entity);
         }
 
-        public static async Task<Result> GetByNameCreateAndSaveEntity<T>(
-            this IRepository<T> repository, string name, Func<string, Task<bool>> existsOfName)
+        public static async Task<Result> CreateNewAndSaveEntityIfNotExistsOfName<T>(
+            this IRepository<T> repository, string name, Func<string, Task<Result<bool>>> existsOfName)
         {
-            bool exists = await existsOfName(name);
-            if (exists)
+            var result = await existsOfName(name);
+            if (!result.IsSuccess)
                 return Result.Failure();
+
+            bool exists = result.Get<bool>();
+            if (exists)
+                return Result.Success();
 
             string id = Guid.NewGuid().ToString();
             T entity = (T) Activator.CreateInstance(typeof(T), new object[] { id, name });
