@@ -9,6 +9,8 @@ namespace Common.Basic.Functional
         private readonly List<object> _doneResults = new List<object>();
         private Action<object[]> _onAllDoneHandler;
 
+        private bool _onDoneSet;
+
         public Action<object> NewHandler
         {
             get
@@ -18,13 +20,28 @@ namespace Common.Basic.Functional
                 return result =>
                 {
                     _doneResults[newIndex] = result;
-                    Handle();
+                    HandleAllDone();
                 };
             }
         }
 
-        private void Handle()
+        public Action<T> AddNewHandler<T>(Action<T> handler)
         {
+            int newIndex = _doneResults.Count;
+            _doneResults.Add(null);
+            return result =>
+            {
+                handler(result);
+                _doneResults[newIndex] = result;
+                HandleAllDone();
+            };
+        }
+
+        private void HandleAllDone()
+        {
+            if (!_onDoneSet)
+                return;
+
             if (!_doneResults.Any(o => o == null))
             {
                 _onAllDoneHandler(_doneResults.ToArray());
@@ -33,10 +50,31 @@ namespace Common.Basic.Functional
 
         public void OnDone<T>(Action<T[]> handler) where T : class
         {
-            // to do: handling immediate finishes
+            _onDoneSet = true;
+            if (!_doneResults.Any(o => o == null))
+            {
+                handler(_doneResults.OfType<T>().ToArray());
+                return;
+            }
+
             _onAllDoneHandler = args =>
             {
-                handler(args.Cast<T>().ToArray());
+                handler(args.OfType<T>().ToArray());
+            };
+        }
+
+        public void OnDone(Action handler)
+        {
+            _onDoneSet = true;
+            if (!_doneResults.Any(o => o == null))
+            {
+                handler();
+                return;
+            }
+
+            _onAllDoneHandler = args =>
+            {
+                handler();
             };
         }
     }
