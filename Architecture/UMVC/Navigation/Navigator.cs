@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Common.Basic.Collections;
+using System.Collections.Generic;
 
 namespace Common.Basic.UMVC
 {
@@ -49,6 +50,9 @@ namespace Common.Basic.UMVC
 
         public INavigatable GetLast()
         {
+            if (_stack.IsEmpty())
+                return null;
+
             return _stack.Peek();
         }
 

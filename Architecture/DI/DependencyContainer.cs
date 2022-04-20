@@ -11,7 +11,7 @@ namespace Common.Basic.DI
         T IDependencyContainer.Register<T>(T obj)
         {
             if (_dependencies.ContainsKey(typeof(T)))
-                return default;
+                _dependencies.Remove(typeof(T));
 
             _dependencies.Add(typeof(T), obj);
             return obj;
@@ -37,6 +37,9 @@ namespace Common.Basic.DI
 
         T IDependencyContainer.Register<T>(T obj, string id)
         {
+            if (_dependenciesWithId.ContainsKey(id))
+                _dependenciesWithId.Remove(id);
+
             _dependenciesWithId.Add(id, new KeyValuePair<Type, object>(typeof(T), obj));
             return obj;
         }
