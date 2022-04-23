@@ -97,6 +97,11 @@ namespace Common.Basic.Repository
             throw new NotImplementedException();
         }
 
+        Task<Result<bool>> IRepository<TEntity>.ExistsOfName(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         Task<Result> IRepository<TEntity>.Delete(string id)
         {
             if (string.IsNullOrWhiteSpace(id))

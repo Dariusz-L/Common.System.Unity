@@ -292,6 +292,8 @@ namespace Common.Basic.Blocks
         public static Task<Result<T>> SuccessTask(T value) => Task.FromResult(Success(value));
         public new static Task<Result<T>> SuccessTask(object value) => Task.FromResult(Success(value));
 
+        public T Get() => Get<T>();
+
         public new T Value
         {
             get
