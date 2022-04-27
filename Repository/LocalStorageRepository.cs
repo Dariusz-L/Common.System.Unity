@@ -3,7 +3,6 @@ using Common.Basic.DDD;
 using Common.Basic.Files;
 using Common.Basic.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,11 +13,19 @@ namespace Common.Basic.Repository
         where TEntity : class, IEntity
     {
         private readonly string _pathToDirectory;
+        private readonly IDirectoryOperations _directoryOperations;
+        private readonly IFileOperations _fileOperations;
         private readonly IJsonConverter _jsonConverter;
 
-        public LocalStorageRepository(string pathToDirectory, IJsonConverter jsonConverter)
+        public LocalStorageRepository(
+            string pathToDirectory, 
+            IDirectoryOperations directoryOperations, 
+            IFileOperations fileOperations,
+            IJsonConverter jsonConverter)
         {
             _pathToDirectory = pathToDirectory;
+            _directoryOperations = directoryOperations;
+            _fileOperations = fileOperations;
             _jsonConverter = jsonConverter;
         }
 
@@ -27,8 +34,8 @@ namespace Common.Basic.Repository
             if (string.IsNullOrWhiteSpace(id))
                 return Result<TEntity>.FailureTask();
 
-            if (!Directory.Exists(_pathToDirectory))
-                Directory.CreateDirectory(_pathToDirectory);
+            if (!_directoryOperations.Exists(_pathToDirectory))
+                _directoryOperations.Create(_pathToDirectory);
 
             if (!Directory.Exists(_pathToDirectory))
                 return Result<TEntity>.FailureTask();
@@ -37,7 +44,7 @@ namespace Common.Basic.Repository
 
             try
             {
-                var fileText = File.ReadAllText(filePath);
+                var fileText = _fileOperations.ReadAsText(filePath);
                 var obj = _jsonConverter.Deserialize<TEntity>(fileText);
                 return Result<TEntity>.SuccessTask(obj);
             }
@@ -50,19 +57,19 @@ namespace Common.Basic.Repository
             }
         }
 
-        Task<Result<IEnumerable<TEntity>>> IRepository<TEntity>.GetAll()
+        Task<Result<TEntity[]>> IRepository<TEntity>.GetAll()
         {
-            if (!Directory.Exists(_pathToDirectory))
-                Directory.CreateDirectory(_pathToDirectory);
+            if (!_directoryOperations.Exists(_pathToDirectory))
+                _directoryOperations.Create(_pathToDirectory);
 
-            string[] filePaths = Directory.GetFiles(_pathToDirectory);
+            string[] filePaths = _directoryOperations.GetFiles(_pathToDirectory);
             if (filePaths == null || filePaths.Length == 0)
-                return Array.Empty<TEntity>().ToResultTask<IEnumerable<TEntity>>();
+                return Array.Empty<TEntity>().ToResultTask();
 
-            var fileTexts = filePaths.Select(fp => File.ReadAllText(fp));
-            var entities = fileTexts.Select(ft => _jsonConverter.Deserialize<TEntity>(ft));
+            var fileTexts = filePaths.Select(fp => _fileOperations.ReadAsText(fp));
+            var entities = fileTexts.Select(ft => _jsonConverter.Deserialize<TEntity>(ft)).ToArray();
 
-            return Result<IEnumerable<TEntity>>.SuccessTask(entities);
+            return Result<TEntity[]>.SuccessTask(entities);
         }
 
         Task<Result> IRepository<TEntity>.Save(TEntity item)
@@ -73,8 +80,8 @@ namespace Common.Basic.Repository
             if (item == null)
                 return Result.FailureTask();
 
-            if (!Directory.Exists(_pathToDirectory))
-                Directory.CreateDirectory(_pathToDirectory);
+            if (!_directoryOperations.Exists(_pathToDirectory))
+                _directoryOperations.Create(_pathToDirectory);
 
             string filePath = FileFunctions.CreateFilePath(_pathToDirectory, item.ID);
 
@@ -83,7 +90,7 @@ namespace Common.Basic.Repository
 
             try
             {
-                File.WriteAllText(filePath, fileData);
+                _fileOperations.WriteAsText(filePath, fileData);
                 return Result.SuccessTask();
             }
             catch (Exception ex)
@@ -97,9 +104,24 @@ namespace Common.Basic.Repository
             throw new NotImplementedException();
         }
 
-        Task<Result<bool>> IRepository<TEntity>.ExistsOfName(string name)
+        async Task<Result<bool>> IRepository<TEntity>.ExistsOfName(string name, Func<TEntity, string> getName)
         {
-            throw new NotImplementedException();
+            var result = Result<bool>.Success();
+
+            var repository = this as IRepository<TEntity>;
+            var getAllResult = await repository.GetAll();
+            if (!getAllResult.IsSuccess)
+                return result.With(getAllResult);
+
+            TEntity[] entities = getAllResult.Get();
+            var entityOfName = entities.FirstOrDefault(e =>
+            {
+                var entityName = getName(e);
+                return entityName == name;
+            });
+
+            bool exists = entityOfName != null;
+            return result.With(exists);
         }
 
         Task<Result> IRepository<TEntity>.Delete(string id)
@@ -107,13 +129,13 @@ namespace Common.Basic.Repository
             if (string.IsNullOrWhiteSpace(id))
                 return Result.FailureTask();
 
-            if (!Directory.Exists(_pathToDirectory))
-                Directory.CreateDirectory(_pathToDirectory);
+            if (!_directoryOperations.Exists(_pathToDirectory))
+                _directoryOperations.Create(_pathToDirectory);
 
             string filePath = FileFunctions.CreateFilePath(_pathToDirectory, id);
             try
             {
-                File.Delete(filePath);
+                _fileOperations.Delete(filePath);
                 return Result.SuccessTask();
             }
             catch (Exception ex)

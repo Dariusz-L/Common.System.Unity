@@ -28,9 +28,9 @@ namespace Common.Basic.Repository
         }
 
         public static async Task<Result> CreateNewAndSaveEntityIfNotExistsOfName<T>(
-            this IRepository<T> repository, string name, Func<string, Task<Result<bool>>> existsOfName)
+            this IRepository<T> repository, string name, Func<T, string> getName)
         {
-            var result = await existsOfName(name);
+            var result = await repository.ExistsOfName(name, getName);
             if (!result.IsSuccess)
                 return Result.Failure();
 
