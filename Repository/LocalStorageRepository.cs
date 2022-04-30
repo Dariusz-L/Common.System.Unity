@@ -72,7 +72,7 @@ namespace Common.Basic.Repository
             return Result<TEntity[]>.SuccessTask(entities);
         }
 
-        Task<Result> IRepository<TEntity>.Save(TEntity item)
+        public Task<Result> Save(TEntity item)
         {
             if (string.IsNullOrWhiteSpace(item.ID))
                 return Result.FailureTask();

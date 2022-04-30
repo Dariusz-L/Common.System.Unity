@@ -27,24 +27,43 @@ namespace Common.Basic.Repository
             return repository.Save(entity);
         }
 
-        public static async Task<Result> CreateNewAndSaveEntityIfNotExistsOfName<T>(
+        public static async Task<Result<T>> CreateNewAndSaveEntityIfNotExistsOfName<T>(
             this IRepository<T> repository, string name, Func<T, string> getName)
         {
-            var result = await repository.ExistsOfName(name, getName);
-            if (!result.IsSuccess)
-                return Result.Failure();
+            var result = new Result<T>();
 
-            bool exists = result.Get<bool>();
+            var existsResult = await repository.ExistsOfName(name, getName);
+            if (!existsResult.IsSuccess)
+                return result.With(existsResult);
+
+            bool exists = existsResult.Get<bool>();
             if (exists)
-                return Result.Success();
+                return result;
 
             string id = Guid.NewGuid().ToString();
             T entity = (T) Activator.CreateInstance(typeof(T), new object[] { id, name });
 
-            return repository.Save(entity);
+            var saveResult = await repository.Save(entity);
+            if (!saveResult.IsSuccess)
+                return result.With(saveResult);
+
+            return result.With(entity);
         }
 
-        public static async Task<Result> GetIfExistsOrCreateAndSave<T>(this IRepository<T> repository, string id, Func<T> createEntity)
+        public static async Task<Result<T>> GetIfExistsOrCreate<T>(this IRepository<T> repository, string id, Func<T> createEntity)
+        {
+            var result = await repository.GetBy(id);
+            if (!result.IsSuccess)
+                return result;
+
+            T entity = result.Get<T>();
+            if (entity != null)
+                return result;
+
+            return createEntity().ToResult();
+        }
+
+        public static async Task<Result<T>> GetIfExistsOrCreateAndSave<T>(this IRepository<T> repository, string id, Func<T> createEntity)
         {
             var result = await repository.GetBy(id);
             if (!result.IsSuccess)
@@ -55,7 +74,16 @@ namespace Common.Basic.Repository
                 return result;
 
             entity = createEntity();
-            return repository.Save(entity);
+            var saveResult = await repository.Save(entity);
+            if (!saveResult.IsSuccess)
+                return result.With(saveResult);
+
+            return result.With(entity);
+        }
+
+        public static Result GetIfExistsOrCreateAndSaveA<T>(this IRepository<T> repository, string id, Func<T> createEntity)
+        {
+            return null;
         }
 
         public static async Task<Result<string>> GetRunAndSaveEntity_ThenCreateNew<T>(
