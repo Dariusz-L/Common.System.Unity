@@ -24,7 +24,7 @@ namespace Common.Basic.Collections
 
         public static void MoveFirstToLast<T>(this IList<T> list) => list.MoveToLast(0);
 
-        public static void Insert<T>(this List<T> list, T item, int index)
+        public static void InsertClamped<T>(this List<T> list, T item, int index)
         {
             index = index.Clamp(0, list.Count);
             list.Insert(index, item);
