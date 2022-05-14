@@ -200,10 +200,12 @@ namespace Common.Basic.Blocks
             _errors.Clear();
         }
 
-        public void AllErrorsToRemarks()
+        public Result AllErrorsToRemarks()
         {
             LocalErrorsToRemarks();
             _subResults.ForEach(r => r.AllErrorsToRemarks());
+
+            return this;
         }
 
         public Result With(params object[] values)

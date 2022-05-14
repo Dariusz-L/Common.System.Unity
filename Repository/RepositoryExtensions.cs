@@ -81,11 +81,6 @@ namespace Common.Basic.Repository
             return result.With(entity);
         }
 
-        public static Result GetIfExistsOrCreateAndSaveA<T>(this IRepository<T> repository, string id, Func<T> createEntity)
-        {
-            return null;
-        }
-
         public static async Task<Result<string>> GetRunAndSaveEntity_ThenCreateNew<T>(
             this IRepository<T> repository, string id, Func<T, string, bool> operation, Func<string, T> create)
         {

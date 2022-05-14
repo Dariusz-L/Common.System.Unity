@@ -7,10 +7,8 @@ namespace Common.Basic.Blocks
 {
     public static class ResultExtensions
     {
-        public static Result ToResult(this IEnumerable<Result> subResults)
-        {
-            return Result.Create(subResults);
-        }
+        public static Result ToResult(this IEnumerable<Result> subResults) =>
+            Result.Create(subResults);
 
         public static Task<Result> ToResultTask(this IEnumerable<Result> subResults)
         {
@@ -60,6 +58,30 @@ namespace Common.Basic.Blocks
         public static Type GetTypeValue<TType>(this Result result)
         {
             return result.GetValues<Type>().Where(t => t == typeof(TType)).FirstOrDefault();
+        }
+
+        public static async Task<Result<T1>> AddTo<T1, T2>(this Task<Result<T1>> resultTask, Result<T2> myResult)
+        {
+            var result = await resultTask;
+
+            myResult.Add(result);
+            return result;
+        }
+
+        public static async Task<Result<T>> AddTo<T>(this Task<Result<T>> resultTask, Result myResult)
+        {
+            var result = await resultTask;
+
+            myResult.Add(result);
+            return result;
+        }
+
+        public static async Task<Result> AddTo(this Task<Result> resultTask, Result myResult)
+        {
+            var result = await resultTask;
+
+            myResult.Add(result);
+            return result;
         }
     }
 }
