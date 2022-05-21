@@ -162,5 +162,8 @@ namespace Common.Basic.Collections
         {
             return source.Flatten(recursion).FirstOrDefault(predicate);
         }
+
+        public static IEnumerable<Tuple<T1, T2>> ZipToTuples<T1, T2>(this IEnumerable<T1> e1, IEnumerable<T2> e2) =>
+            e1.Zip(e2, (x, y) => new Tuple<T1, T2>(x, y));
     }
 }
