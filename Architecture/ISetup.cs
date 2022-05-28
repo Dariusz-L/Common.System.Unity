@@ -1,7 +1,7 @@
 ﻿namespace Common.Basic.Architecture
 {
-    public interface IInitiable
+    public interface ISetup
     {
-        void Init();
+        void Setup();
     }
 }

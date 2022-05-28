@@ -132,6 +132,24 @@ namespace Common.Basic.Functional
             return @object;
         }
 
+        public static T IfOkThen<T>(this T @object, Action action)
+        {
+            if (@object != null)
+                action();
+
+            return @object;
+        }
+
+        public static T IfOkOrNot<T>(this T @object, Action actionOnOk, Action actionOnNull)
+        {
+            if (@object != null)
+                actionOnOk();
+            else
+                actionOnNull();
+
+            return @object;
+        }
+
         public static bool Not(this bool value)
         {
             return !value;
