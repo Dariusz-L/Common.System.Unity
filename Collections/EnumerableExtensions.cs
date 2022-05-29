@@ -151,16 +151,35 @@ namespace Common.Basic.Collections
             return true;
         }
 
-        public static IEnumerable<T> Flatten<T, R>(this IEnumerable<T> source, Func<T, R> recursion) where R : IEnumerable<T>
-        {
-            return source.SelectMany(x => (recursion(x) != null && recursion(x).Any()) ? recursion(x).Flatten(recursion) : null)
-                         .Where(x => x != null);
-        }
+        //public static IEnumerable<T> Flatten<T, R>(this IEnumerable<T> source, Func<T, R> recursion) where R : IEnumerable<T>
+        //{
+        //    if (source == null || recursion == null)
+        //        return null;
 
-        public static T FindInRecursionFlattened<T, R>(
-            this IEnumerable<T> source, Func<T, R> recursion, Func<T, bool> predicate) where R : IEnumerable<T>
+        //    return source.SelectMany(x => 
+        //    {
+        //        var recursionValue = recursion(x).ToArray();
+        //        if (recursionValue.IsNullOrEmpty())
+        //            return Array.Empty<T>();
+
+        //        return recursionValue.Flatten(recursion);
+        //    })
+        //    .Where(x => x != null)
+        //    .ToArray();
+        //}
+
+        public static IEnumerable<TSource> Flatten<TSource>(
+              this IEnumerable<TSource> source,
+              Func<TSource, IEnumerable<TSource>> getChildrenFunction)
         {
-            return source.Flatten(recursion).FirstOrDefault(predicate);
+            foreach (TSource element in source)
+            {
+                var children = getChildrenFunction(element);
+                var childrenFlattened = children.Flatten(getChildrenFunction);
+                source = source.Concat(childrenFlattened);
+            }
+
+            return source;
         }
 
         public static IEnumerable<Tuple<T1, T2>> ZipToTuples<T1, T2>(this IEnumerable<T1> e1, IEnumerable<T2> e2) =>
