@@ -1,10 +1,21 @@
 ﻿using Common.Basic.Collections;
 using System;
+using System.Collections.Generic;
 
 namespace Common.Basic.Functional
 {
     public static class FunctionalActions
     {
+        public static bool IfOkThenAdd<T>(this bool value, List<T> list, T item, int index)
+        {
+            if (!value)
+                return value;
+
+            list.InsertClamped(item, index);
+
+            return value;
+        }
+
         public static void IfOkOrNot(Func<bool> condition, Action onTrue, Action onFalse)
         {
             if (condition())
