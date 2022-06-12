@@ -76,6 +76,18 @@ namespace Common.Basic.Blocks
             return result;
         }
 
+        public static async Task<T> AddAndGet<T>(this Task<Result<T>> resultTask, Result myResult)
+        {
+            var result = await resultTask;
+            myResult.Add(result);
+
+            var value = result.Get();
+            if (!result.IsSuccess)
+                return default;
+
+            return value;
+        }
+
         public static async Task<Result> AddTo(this Task<Result> resultTask, Result myResult)
         {
             var result = await resultTask;
