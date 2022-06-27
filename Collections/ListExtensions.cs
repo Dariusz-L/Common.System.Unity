@@ -1,4 +1,5 @@
 ﻿using Common.Basic.Maths;
+using System;
 using System.Collections.Generic;
 
 namespace Common.Basic.Collections
@@ -45,6 +46,19 @@ namespace Common.Basic.Collections
                 return default;
 
             return list[newIndex];
+        }
+
+        public static void RemoveFirstIf<T>(this IList<T> list, Func<T, bool> predicate)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                var item = list[i];
+                if (!predicate(item))
+                    continue;
+
+                list.RemoveAt(i);
+                return;
+            }
         }
     }
 }
